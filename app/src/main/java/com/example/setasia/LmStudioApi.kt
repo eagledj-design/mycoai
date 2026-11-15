@@ -6,8 +6,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Query
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
@@ -17,13 +17,13 @@ data class ConsultRequest(
     val question: String,
     val latitude: Double? = null,
     val longitude: Double? = null,
+    @SerializedName("radius_km") val radiusKm: Int? = null,
     val month: Int? = null,
     val species: List<String>? = null,
     val images: List<String>? = null,
     val provider: String? = null,
     val model: String? = null,
-    @SerializedName("vision_model")
-    val visionModel: String? = null
+    @SerializedName("vision_model") val visionModel: String? = null
 )
 
 data class ConsultResponse(
@@ -54,15 +54,7 @@ data class CandidateSpecies(
     val example: String? = null
 )
 
-data class ProviderModelsResponse(val provider: String, val models: List<String>)
-
 interface MycoAiApi {
-    @GET("models")
-    suspend fun listModels(
-        @Query("provider") provider: String,
-        @Header("X-MycoAI-Provider-Key") providerKey: String? = null
-    ): ProviderModelsResponse
-
     @GET("health")
     suspend fun checkHealth(): retrofit2.Response<Void>
 
@@ -71,33 +63,54 @@ interface MycoAiApi {
         @Body request: ConsultRequest,
         @Header("X-MycoAI-Provider-Key") providerKey: String? = null
     ): ConsultResponse
+
+    @GET("models")
+    suspend fun listModels(
+        @Query("provider") provider: String,
+        @Header("X-MycoAI-Provider-Key") providerKey: String? = null
+    ): ListModelsResponse
 }
 
+data class ListModelsResponse(
+    val provider: String,
+    val models: List<String>
+)
+
 object RetrofitClient {
-    private val BASE_URL = BuildConfig.BACKEND_URL
     private val TOKEN = BuildConfig.BACKEND_TOKEN
 
-    val instance: MycoAiApi by lazy {
-        val authInterceptor = Interceptor { chain ->
-            val request = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer $TOKEN")
-                .addHeader("Content-Type", "application/json")
+    private var currentBaseUrl: String? = null
+    private var currentInstance: MycoAiApi? = null
+
+    fun getInstance(baseUrl: String): MycoAiApi {
+        // Aseguramos que la URL termina en barra "/"
+        val safeUrl = if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/"
+
+        if (currentInstance == null || currentBaseUrl != safeUrl) {
+            currentBaseUrl = safeUrl
+
+            val authInterceptor = Interceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader("Authorization", "Bearer $TOKEN")
+                    .addHeader("Content-Type", "application/json")
+                    .build()
+                chain.proceed(request)
+            }
+
+            val okHttpClient = OkHttpClient.Builder()
+                .readTimeout(180, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .addInterceptor(authInterceptor)
                 .build()
-            chain.proceed(request)
+
+            val retrofit = Retrofit.Builder()
+                .baseUrl(safeUrl)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+            currentInstance = retrofit.create(MycoAiApi::class.java)
         }
-
-        val okHttpClient = OkHttpClient.Builder()
-            .readTimeout(180, TimeUnit.SECONDS) // Two calls could take some time
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .addInterceptor(authInterceptor)
-            .build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        retrofit.create(MycoAiApi::class.java)
+        return currentInstance!!
     }
 }

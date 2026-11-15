@@ -26,7 +26,7 @@ android {
         if (localPropertiesFile.exists()) {
             localProperties.load(FileInputStream(localPropertiesFile))
         }
-        val backendUrl = localProperties.getProperty("BACKEND_URL", "http://100.118.248.56:8765/")
+        val backendUrl = localProperties.getProperty("BACKEND_URL", "http://AQUI_TU_IP:8765/")
         val backendToken = localProperties.getProperty("BACKEND_TOKEN", "")
         
         buildConfigField("String", "BACKEND_URL", "\"$backendUrl\"")

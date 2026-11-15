@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.coverage
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+local.properties
+keystore.properties
+*.jks
+*.keystore
+
+# Android and IDEs
+.gradle/
+.kotlin/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+.idea/
+*.iml
+*.apk
+*.aab
+
+# Logs, backups and generated library data
+logs/
+*.log
+backups/
+knowledge/fuentes/documentos/
+knowledge/fuentes/metadatos/
+knowledge/especies/pendientes/

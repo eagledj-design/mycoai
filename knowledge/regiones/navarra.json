@@ -1,0 +1,437 @@
+[
+  {
+    "species": [
+      "Boletus edulis"
+    ],
+    "zones": [
+      "Urbasa"
+    ],
+    "url": "https://www.navarra.es/NR/rdonlyres/C878FEE5-C0F0-4E06-BD2F-7A415743919C/400225/Resumen_Publico_Urbasa_FSC_2016.pdf",
+    "title": "Gobierno de Navarra · Informe de Urbasa, 2016",
+    "excerpt": "El informe enumera Boletus edulis entre los boletos que se buscaban en otoño en el monte Sierra de Urbasa.",
+    "locator": "Sección Setas",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Boletus aereus"
+    ],
+    "zones": [
+      "Urbasa"
+    ],
+    "url": "https://www.navarra.es/NR/rdonlyres/C878FEE5-C0F0-4E06-BD2F-7A415743919C/400225/Resumen_Publico_Urbasa_FSC_2016.pdf",
+    "title": "Gobierno de Navarra · Informe de Urbasa, 2016",
+    "excerpt": "El informe enumera Boletus aereus entre los boletos que se buscaban en otoño en el monte Sierra de Urbasa.",
+    "locator": "Sección Setas",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Boletus aestivalis"
+    ],
+    "zones": [
+      "Urbasa"
+    ],
+    "url": "https://www.navarra.es/NR/rdonlyres/C878FEE5-C0F0-4E06-BD2F-7A415743919C/400225/Resumen_Publico_Urbasa_FSC_2016.pdf",
+    "title": "Gobierno de Navarra · Informe de Urbasa, 2016",
+    "excerpt": "El informe enumera Boletus aestivalis entre los boletos que se buscaban en otoño en el monte Sierra de Urbasa.",
+    "locator": "Sección Setas",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Calocybe gambosa"
+    ],
+    "zones": [
+      "Urbasa"
+    ],
+    "url": "https://www.navarra.es/NR/rdonlyres/C878FEE5-C0F0-4E06-BD2F-7A415743919C/400225/Resumen_Publico_Urbasa_FSC_2016.pdf",
+    "title": "Gobierno de Navarra · Informe de Urbasa, 2016",
+    "excerpt": "El informe cita Calocybe gambosa en los pastizales de Urbasa en primavera.",
+    "locator": "Sección Setas",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Hygrophorus marzuolus"
+    ],
+    "zones": [
+      "Urbasa",
+      "Andia"
+    ],
+    "url": "https://parquenaturalurbasaandia.es/wp-content/uploads/2022/11/Proyecto_de_Ordenacion_de_Pastos_Urbasa-Andia.pdf",
+    "title": "Proyecto de ordenación de pastos de Urbasa y Andia",
+    "excerpt": "En el ámbito conjunto de Urbasa y Andia, Hygrophorus marzuolus se cita como ejemplo de desarrollo primaveral.",
+    "locator": "Sección 2.5 Hongos, p. 40",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Coprinus comatus"
+    ],
+    "zones": [
+      "Urbasa",
+      "Andia"
+    ],
+    "url": "https://parquenaturalurbasaandia.es/wp-content/uploads/2022/11/Proyecto_de_Ordenacion_de_Pastos_Urbasa-Andia.pdf",
+    "title": "Proyecto de ordenación de pastos de Urbasa y Andia",
+    "excerpt": "En el ámbito conjunto de Urbasa y Andia, Coprinus comatus figura entre los hongos de prados.",
+    "locator": "Sección 2.5 Hongos, p. 40",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Marasmius oreades"
+    ],
+    "zones": [
+      "Urbasa",
+      "Andia"
+    ],
+    "url": "https://parquenaturalurbasaandia.es/wp-content/uploads/2022/11/Proyecto_de_Ordenacion_de_Pastos_Urbasa-Andia.pdf",
+    "title": "Proyecto de ordenación de pastos de Urbasa y Andia",
+    "excerpt": "En el ámbito conjunto de Urbasa y Andia, Marasmius oreades figura entre los hongos de prados.",
+    "locator": "Sección 2.5 Hongos, p. 40",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Agaricus bernardii"
+    ],
+    "zones": [
+      "Urbasa",
+      "Andia"
+    ],
+    "url": "https://parquenaturalurbasaandia.es/wp-content/uploads/2022/11/Proyecto_de_Ordenacion_de_Pastos_Urbasa-Andia.pdf",
+    "title": "Proyecto de ordenación de pastos de Urbasa y Andia",
+    "excerpt": "En el ámbito conjunto de Urbasa y Andia, Agaricus bernardii se asocia a pastos frecuentados por ganado.",
+    "locator": "Sección 2.5 Hongos, p. 40",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Psathyrella spadiceogrisea"
+    ],
+    "zones": [
+      "Urbasa",
+      "Andia"
+    ],
+    "url": "https://parquenaturalurbasaandia.es/wp-content/uploads/2022/11/Proyecto_de_Ordenacion_de_Pastos_Urbasa-Andia.pdf",
+    "title": "Proyecto de ordenación de pastos de Urbasa y Andia",
+    "excerpt": "En el ámbito conjunto de Urbasa y Andia, Psathyrella spadiceogrisea se cita, con la grafía histórica Psathyrella spadiceo-grisea, en claros herbosos y bosques de caducifolios.",
+    "locator": "Sección 2.5 Hongos, p. 40",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Hygrocybe coccinea"
+    ],
+    "zones": [
+      "Aralar",
+      "Urbasa"
+    ],
+    "url": "https://www.eusko-ikaskuntza.eus/PDFAnlt/naturzale/03/03007284.pdf",
+    "title": "García Bona · Catálogo micológico de Navarra, 1987",
+    "excerpt": "Hygrocybe coccinea. El catálogo cita San Miguel de Aralar y Urbasa. Describe prados en entornos de bosque húmedo y una temporada de octubre a finales de noviembre.",
+    "locator": "p. 105",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Hygrocybe chlorophana"
+    ],
+    "zones": [
+      "Urbasa"
+    ],
+    "url": "https://www.eusko-ikaskuntza.eus/PDFAnlt/naturzale/03/03007284.pdf",
+    "title": "García Bona · Catálogo micológico de Navarra, 1987",
+    "excerpt": "Hygrocybe chlorophana. Urbasa figura entre las localidades. Se describen pastizales y prados húmedos, con temporada de mediados de octubre a finales de noviembre.",
+    "locator": "p. 105",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Hygrocybe citrina"
+    ],
+    "zones": [
+      "Urbasa"
+    ],
+    "url": "https://www.eusko-ikaskuntza.eus/PDFAnlt/naturzale/03/03007284.pdf",
+    "title": "García Bona · Catálogo micológico de Navarra, 1987",
+    "excerpt": "Hygrocybe citrina. Con ese nombre histórico se recoge una cita del 12 de noviembre de 1977 en un prado del hayedo de la parte alta de Urbasa.",
+    "locator": "p. 105",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Marasmius oreades"
+    ],
+    "zones": [
+      "Entzia"
+    ],
+    "url": "https://www.ian-ani.org/wp-content/uploads/MEMORIA-2023.pdf",
+    "title": "Instituto Alavés de la Naturaleza · Memoria 2023",
+    "excerpt": "El instituto observó Marasmius oreades en los prados de acceso al hayedo de Iturbaz, en la sierra de Entzia, el 28 de octubre de 2023.",
+    "locator": "Cuarta salida de setas, p. 30",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Infundibulicybe geotropa"
+    ],
+    "zones": [
+      "Entzia"
+    ],
+    "url": "https://www.ian-ani.org/wp-content/uploads/MEMORIA-2023.pdf",
+    "title": "Instituto Alavés de la Naturaleza · Memoria 2023",
+    "excerpt": "El instituto observó Infundibulicybe geotropa en los prados de acceso al hayedo de Iturbaz, en la sierra de Entzia, el 28 de octubre de 2023.",
+    "locator": "Cuarta salida de setas, p. 30",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Hygrocybe conica"
+    ],
+    "zones": [
+      "Entzia"
+    ],
+    "url": "https://www.ian-ani.org/wp-content/uploads/MEMORIA-2023.pdf",
+    "title": "Instituto Alavés de la Naturaleza · Memoria 2023",
+    "excerpt": "El instituto observó Hygrocybe conica en los prados de acceso al hayedo de Iturbaz, en la sierra de Entzia, el 28 de octubre de 2023.",
+    "locator": "Cuarta salida de setas, p. 30",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Helvella crispa"
+    ],
+    "zones": [
+      "Entzia"
+    ],
+    "url": "https://www.ian-ani.org/wp-content/uploads/MEMORIA-2023.pdf",
+    "title": "Instituto Alavés de la Naturaleza · Memoria 2023",
+    "excerpt": "El instituto observó Helvella crispa al entrar en el hayedo de Iturbaz, en la sierra de Entzia, el 28 de octubre de 2023.",
+    "locator": "Cuarta salida de setas, p. 30",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Mycetinis alliaceus"
+    ],
+    "zones": [
+      "Entzia"
+    ],
+    "url": "https://www.ian-ani.org/wp-content/uploads/MEMORIA-2023.pdf",
+    "title": "Instituto Alavés de la Naturaleza · Memoria 2023",
+    "excerpt": "El instituto observó Mycetinis alliaceus al entrar en el hayedo de Iturbaz, en la sierra de Entzia, el 28 de octubre de 2023.",
+    "locator": "Cuarta salida de setas, p. 30",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Mucidula mucida"
+    ],
+    "zones": [
+      "Entzia"
+    ],
+    "url": "https://www.ian-ani.org/wp-content/uploads/MEMORIA-2023.pdf",
+    "title": "Instituto Alavés de la Naturaleza · Memoria 2023",
+    "excerpt": "El instituto observó Mucidula mucida en una haya caída de Iturbaz, en la sierra de Entzia, el 28 de octubre de 2023.",
+    "locator": "Cuarta salida de setas, p. 30",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Coprinellus disseminatus"
+    ],
+    "zones": [
+      "Entzia"
+    ],
+    "url": "https://www.ian-ani.org/wp-content/uploads/MEMORIA-2023.pdf",
+    "title": "Instituto Alavés de la Naturaleza · Memoria 2023",
+    "excerpt": "El instituto observó Coprinellus disseminatus en una haya caída de Iturbaz, en la sierra de Entzia, el 28 de octubre de 2023.",
+    "locator": "Cuarta salida de setas, p. 30",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Crepidotus mollis"
+    ],
+    "zones": [
+      "Entzia"
+    ],
+    "url": "https://www.ian-ani.org/wp-content/uploads/MEMORIA-2023.pdf",
+    "title": "Instituto Alavés de la Naturaleza · Memoria 2023",
+    "excerpt": "El instituto observó Crepidotus mollis en una haya caída de Iturbaz, en la sierra de Entzia, el 28 de octubre de 2023.",
+    "locator": "Cuarta salida de setas, p. 30",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Leucoagaricus leucothites"
+    ],
+    "zones": [
+      "Entzia"
+    ],
+    "url": "https://www.aranzadi.eus/buscador-micologico/ficha/1-1-003.06.08.00.14.00",
+    "title": "Aranzadi · Leucoagaricus leucothites",
+    "excerpt": "Aranzadi lista una recogida de Leucoagaricus leucothites en Entzia, Álava, el 7 de octubre de 2020.",
+    "locator": "Recogidas",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Macrolepiota procera"
+    ],
+    "zones": [
+      "Entzia"
+    ],
+    "url": "https://www.aranzadi.eus/buscador-micologico/ficha/1-1-003.06.07.00.02.00",
+    "title": "Aranzadi · Macrolepiota procera",
+    "excerpt": "Aranzadi lista una recogida de Macrolepiota procera en Entzia, Álava, el 7 de octubre de 2020.",
+    "locator": "Recogidas",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Hygrophoropsis aurantiaca"
+    ],
+    "zones": [
+      "Entzia"
+    ],
+    "url": "https://www.aranzadi.eus/buscador-micologico/ficha/1-1-002.03.02.00.01.00",
+    "title": "Aranzadi · Hygrophoropsis aurantiaca",
+    "excerpt": "Aranzadi lista una recogida de Hygrophoropsis aurantiaca en Entzia, Álava, el 23 de septiembre de 2020.",
+    "locator": "Recogidas",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Marasmius oreades"
+    ],
+    "zones": [
+      "Aizkorri-Aratz"
+    ],
+    "url": "https://www.arabakolautada.eus/fichas/43/98/Parque-micologico-de-Asparrena-Apota",
+    "title": "Cuadrilla de la Llanada Alavesa · Parque micológico de Asparrena-Apota",
+    "excerpt": "La ficha del parque micológico menciona Marasmius oreades en Asparrena-Apota, al norte de Araia, dentro de Aizkorri-Aratz. La ficha no da fecha, sustrato ni mes de observación.",
+    "locator": "Descripción del parque micológico",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Agaricus campestris"
+    ],
+    "zones": [
+      "Aralar"
+    ],
+    "url": "https://www.aranzadi.eus/buscador-micologico/ficha/1-1-003.06.01.03.06.00/recogida/ARAN23636",
+    "title": "Aranzadi · Agaricus campestris",
+    "excerpt": "Aranzadi documentó Agaricus campestris en Albi, Aralar, en un prado calcáreo el 1 de noviembre de 2025.",
+    "locator": "Recogida ARAN23636",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Amanita muscaria"
+    ],
+    "zones": [
+      "Aralar"
+    ],
+    "url": "https://www.aranzadi.eus/buscador-micologico/ficha/1-1-003.05.01.02.04.00/recogida/ARAN02084",
+    "title": "Aranzadi · Amanita muscaria",
+    "excerpt": "Aranzadi documentó Amanita muscaria en Albi, Aralar, en suelo bajo pino silvestre el 28 de octubre de 2015.",
+    "locator": "Recogida ARAN02084",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Boletus calopus"
+    ],
+    "zones": [
+      "Aralar"
+    ],
+    "url": "https://www.aranzadi.eus/buscador-micologico/ficha/1-1-002.02.11.03.05.00/recogida/5266085-1",
+    "title": "Aranzadi · Boletus calopus",
+    "excerpt": "Aranzadi documentó Boletus calopus en Albi, Aralar, en suelo bajo haya el 8 de julio de 1996.",
+    "locator": "Recogida 5266085-1",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Russula rosea"
+    ],
+    "zones": [
+      "Aralar"
+    ],
+    "url": "https://www.aranzadi.eus/buscador-micologico/ficha/1-1-004.01.01.07.05.00/recogida/5266351",
+    "title": "Aranzadi · Russula rosea",
+    "excerpt": "Aranzadi documentó Russula rosea en Debata, Aralar, en suelo bajo haya el 10 de octubre de 2008.",
+    "locator": "Recogida 5266351",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Clitocybe vibecina"
+    ],
+    "zones": [
+      "Aralar"
+    ],
+    "url": "https://www.aranzadi.eus/buscador-micologico/ficha/1-1-003.02.08.07.11.00/recogida/5266104",
+    "title": "Aranzadi · Clitocybe vibecina",
+    "excerpt": "Aranzadi documentó Clitocybe vibecina en Albi, Aralar, en suelo bajo pino silvestre el 10 de octubre de 1993.",
+    "locator": "Recogida 5266104",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Boletus aereus"
+    ],
+    "zones": [
+      "Aralar"
+    ],
+    "url": "https://www.navarra.es/NR/rdonlyres/C878FEE5-C0F0-4E06-BD2F-7A415743919C/400224/ResumenpublicoAralarFSC2016.pdf",
+    "title": "Gobierno de Navarra · Informe de Aralar, 2016",
+    "excerpt": "En el informe del Monte Aralar, Boletus aereus figura entre los boletos buscados en otoño.",
+    "locator": "Sección Setas",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Boletus edulis"
+    ],
+    "zones": [
+      "Aralar"
+    ],
+    "url": "https://www.navarra.es/NR/rdonlyres/C878FEE5-C0F0-4E06-BD2F-7A415743919C/400224/ResumenpublicoAralarFSC2016.pdf",
+    "title": "Gobierno de Navarra · Informe de Aralar, 2016",
+    "excerpt": "En el informe del Monte Aralar, Boletus edulis figura entre los boletos buscados en otoño.",
+    "locator": "Sección Setas",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Calocybe gambosa"
+    ],
+    "zones": [
+      "Aralar"
+    ],
+    "url": "https://www.navarra.es/NR/rdonlyres/C878FEE5-C0F0-4E06-BD2F-7A415743919C/400224/ResumenpublicoAralarFSC2016.pdf",
+    "title": "Gobierno de Navarra · Informe de Aralar, 2016",
+    "excerpt": "En el informe del Monte Aralar, Calocybe gambosa se cita en pastizales de altura en primavera.",
+    "locator": "Sección Setas",
+    "type": "referencia_regional_historica"
+  },
+  {
+    "species": [
+      "Ramaria subbotrytis"
+    ],
+    "zones": [
+      "Aralar"
+    ],
+    "url": "https://rutasnavarra.com/Rutas/paseo-micologico-otonal-por-los-robledales-de-lakuntza-barranca_robledales-en-la-ladera-de-la-sierra-de-aralar-al-otro-lado-de-la-via-cerca-de-lakuntza_18092.html",
+    "title": "Luis Miguel García Bona · Paseo micológico de Lakuntza",
+    "excerpt": "García Bona anotó Ramaria subbotrytis en una salida por los robledales de la ladera de Aralar, cerca de Lakuntza, el 24 de septiembre de 2023.",
+    "locator": "Principales hongos observados",
+    "type": "referencia_regional_historica"
+  }
+]

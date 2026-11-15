@@ -370,6 +370,8 @@ fun ChatBubble(message: UIMessage) {
 
 @Composable
 fun ConfigScreen(viewModel: MushroomViewModel) {
+    var backendUrl by remember { mutableStateOf(BuildConfig.BACKEND_URL) }
+    
     var isPrivate by remember { mutableStateOf(true) }
     
     val privateProviders = listOf("lm_studio", "ollama")
@@ -409,7 +411,20 @@ fun ConfigScreen(viewModel: MushroomViewModel) {
         ) {
             Spacer(modifier = Modifier.height(32.dp))
             Text("Configuración MycoAI", style = MaterialTheme.typography.headlineMedium, color = Color.White)
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Selector dinámico de URL del Servidor MycoAI
+            OutlinedTextField(
+                value = backendUrl, 
+                onValueChange = { backendUrl = it }, 
+                label = { Text("URL del Servidor MycoAI") }, 
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
+                )
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                 Button(
@@ -463,7 +478,7 @@ fun ConfigScreen(viewModel: MushroomViewModel) {
             }
             
             Button(
-                onClick = { viewModel.fetchModels(selectedProvider, if (!isPrivate) apiKey else null) },
+                onClick = { viewModel.fetchModels(backendUrl, selectedProvider, if (!isPrivate) apiKey else null) },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isFetching
             ) {
@@ -537,6 +552,7 @@ fun ConfigScreen(viewModel: MushroomViewModel) {
             Button(
                 onClick = {
                     viewModel.startChat(
+                        backendUrl = backendUrl,
                         provider = selectedProvider,
                         model = selectedModel,
                         visionModel = if (useVisionModel && selectedVisionModel.isNotBlank()) selectedVisionModel else null,

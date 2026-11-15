@@ -16,6 +16,7 @@ class MushroomViewModel : ViewModel() {
 
     val currentScreen = MutableStateFlow(AppScreen.CONFIG)
     
+    var currentBackendUrl: String = ""
     var currentProvider: String? = null
     var currentModel: String? = null
     var currentVisionModel: String? = null
@@ -60,12 +61,12 @@ class MushroomViewModel : ViewModel() {
         currentLon = lon
     }
 
-    fun fetchModels(provider: String, providerKey: String? = null) {
-        if (provider.isBlank()) return
+    fun fetchModels(backendUrl: String, provider: String, providerKey: String? = null) {
+        if (provider.isBlank() || backendUrl.isBlank()) return
         viewModelScope.launch {
             _isFetchingModels.value = true
             try {
-                val models = RetrofitClient.instance.listModels(provider, providerKey)
+                val models = RetrofitClient.getInstance(backendUrl).listModels(provider, providerKey)
                 _availableModels.value = models
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -76,7 +77,8 @@ class MushroomViewModel : ViewModel() {
         }
     }
 
-    fun startChat(provider: String, model: String, visionModel: String?, providerKey: String?) {
+    fun startChat(backendUrl: String, provider: String, model: String, visionModel: String?, providerKey: String?) {
+        this.currentBackendUrl = backendUrl
         this.currentProvider = provider
         this.currentModel = model
         this.currentVisionModel = visionModel
@@ -119,12 +121,12 @@ class MushroomViewModel : ViewModel() {
             try {
                 // Verificar health (opcional, recomendado en el prompt)
                 try {
-                    val health = RetrofitClient.instance.checkHealth()
+                    val health = RetrofitClient.getInstance(currentBackendUrl).checkHealth()
                     if (!health.isSuccessful) {
                         throw Exception("Backend no disponible")
                     }
                 } catch (e: Exception) {
-                    _chatHistory.value = _chatHistory.value + UIMessage("assistant", "Error de conexión: Backend MycoAI no accesible. Revisa Tailscale.")
+                    _chatHistory.value = _chatHistory.value + UIMessage("assistant", "Error de conexión: Backend MycoAI no accesible en $currentBackendUrl.")
                     _isLoading.value = false
                     return@launch
                 }
@@ -140,7 +142,7 @@ class MushroomViewModel : ViewModel() {
                     visionModel = currentVisionModel,
                     providerKey = currentProviderKey
                 )
-                val response = RetrofitClient.instance.consult(request)
+                val response = RetrofitClient.getInstance(currentBackendUrl).consult(request)
                 
                 val aiMessage = UIMessage(
                     role = "assistant", 

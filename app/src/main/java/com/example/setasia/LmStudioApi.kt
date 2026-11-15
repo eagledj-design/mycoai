@@ -69,30 +69,40 @@ interface MycoAiApi {
 }
 
 object RetrofitClient {
-    private val BASE_URL = BuildConfig.BACKEND_URL
     private val TOKEN = BuildConfig.BACKEND_TOKEN
+    
+    private var currentBaseUrl: String? = null
+    private var currentInstance: MycoAiApi? = null
 
-    val instance: MycoAiApi by lazy {
-        val authInterceptor = Interceptor { chain ->
-            val request = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer $TOKEN")
-                .addHeader("Content-Type", "application/json")
+    fun getInstance(baseUrl: String): MycoAiApi {
+        // Aseguramos que la URL termina en barra "/"
+        val safeUrl = if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/"
+
+        if (currentInstance == null || currentBaseUrl != safeUrl) {
+            currentBaseUrl = safeUrl
+            
+            val authInterceptor = Interceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader("Authorization", "Bearer $TOKEN")
+                    .addHeader("Content-Type", "application/json")
+                    .build()
+                chain.proceed(request)
+            }
+
+            val okHttpClient = OkHttpClient.Builder()
+                .readTimeout(180, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .addInterceptor(authInterceptor)
                 .build()
-            chain.proceed(request)
+
+            val retrofit = Retrofit.Builder()
+                .baseUrl(safeUrl)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+            currentInstance = retrofit.create(MycoAiApi::class.java)
         }
-
-        val okHttpClient = OkHttpClient.Builder()
-            .readTimeout(180, TimeUnit.SECONDS)
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .addInterceptor(authInterceptor)
-            .build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        retrofit.create(MycoAiApi::class.java)
+        return currentInstance!!
     }
 }

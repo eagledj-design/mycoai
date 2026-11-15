@@ -113,3 +113,37 @@ El modelo visual propone rasgos e hipótesis y el modelo de texto los coteja
 con la biblioteca. La API devuelve answer, sources, geography y
 safety. El resultado es orientativo y el GPS aporta evidencia histórica,
 sin confirmar presencia actual.
+
+### Cobertura nacional y fecha
+
+En GBIF, solicita una descarga de ocurrencias en formato CSV simple
+(`SIMPLE_CSV`) con país España, reino Fungi, presencia, coordenadas
+disponibles y sin problemas geoespaciales. La descarga incluye los
+registros publicados que coincidan con los filtros, con cobertura desigual
+entre lugares y fechas. Descarga el ZIP y conserva el DOI de GBIF.
+
+```bash
+python backend/national_records.py /ruta/a/descarga-gbif.zip --doi 10.15468/dl.TU_CODIGO
+```
+
+El importador conserva cada registro como JSON en un índice SQLite
+ubicado en `knowledge/gbif/` dentro del directorio de datos. Repetir la
+importación actualiza por identificador de GBIF. El índice alimenta
+consultas GPS. Para ampliar la documentación por especie, se mantiene
+`backend/ingest.py` con las fuentes autorizadas.
+
+En Android puedes añadir `observation_date` al JSON de `POST /consult`
+con la fecha local en formato ISO (por ejemplo, `"2026-11-15"`). Si falta,
+el servidor usa el día actual en la zona Europe/Madrid. Las peticiones
+que envían explícitamente solo `month` conservan el filtro mensual.
+
+Con fecha completa se buscan observaciones históricas de los 15 días
+anteriores y posteriores a ese día del calendario, en cualquier año.
+Si el índice no tiene coincidencias se consulta GBIF en directo.
+`geography.origin` indica qué fuente se usó y `geography.truncated`
+indica si la consulta muestreó una parte de los registros.
+
+Añade `--document-species 20` al comando de importación para buscar y
+guardar también artículos de hasta 20 especies del índice. Prioriza las
+más representadas en la descarga, omite las que ya tienen un artículo
+recuperable y requiere la clave Tavily.

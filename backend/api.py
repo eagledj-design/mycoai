@@ -5,7 +5,7 @@ import binascii
 import json
 import os
 import re
-from datetime import datetime
+from datetime import date, datetime
 from secrets import compare_digest
 from zoneinfo import ZoneInfo
 
@@ -17,6 +17,7 @@ from config import PROJECT_DIR
 from gbif_client import nearby_fungi
 from library import passages
 from myco_engine import ask_lm_studio
+from weather import recent_weather
 
 app = FastAPI(title="MycoAI")
 PROTOCOL = (PROJECT_DIR / "SYSTEM_MICOLOGIA.txt").read_text(encoding="utf-8")
@@ -29,6 +30,7 @@ class Consultation(BaseModel):
     images: list[str] = Field(default_factory=list, max_length=4)
     latitude: float | None = Field(default=None, ge=-90, le=90)
     longitude: float | None = Field(default=None, ge=-180, le=180)
+    observation_date: date | None = None
     month: int | None = Field(default=None, ge=1, le=12)
 
 
@@ -53,15 +55,17 @@ def format_area_answer(regional: list[dict], geography: dict | None) -> str:
             f"- {row['excerpt']} [Fuente]({row['url']})"
             for row in regional
         ]
-        sections.append("### Referencias regionales históricas\n" + "\n".join(lines))
+        sections.append("### Referencias regionales históricas (contexto general)\n" + "\n".join(lines))
     if geography is not None:
         lines = [
             f"- {item['species']} · [Registro GBIF]({item['example']})"
             for item in geography["candidate_species"]
         ]
         origin = f"de {geography['area']}" if geography.get("area") else "del GPS"
+        month, day = geography["month"], geography.get("day")
+        period = f"{day:02d}/{month:02d} ±15 días" if day else f"mes {month}"
         sections.append(
-            f"### Registros históricos cerca {origin} (mes {geography['month']})\n"
+            f"### Registros históricos cerca {origin} ({period})\n"
             + ("\n".join(lines) if lines else "La muestra no contiene especies candidatas.")
         )
     sections.append("Estos registros orientan la búsqueda. La presencia actual se comprueba en campo.")
@@ -90,6 +94,8 @@ def consult(query: Consultation, authorization: str = Header(default="")) -> dic
 
     geography = None
     geography_error = None
+    weather = None
+    weather_requested = False
     latitude, longitude = query.latitude, query.longitude
     area = None
     if not query.images and re.search(r"\burdiain\b", query.question, re.I):
@@ -97,13 +103,23 @@ def consult(query: Consultation, authorization: str = Header(default="")) -> dic
         latitude, longitude = 42.88687, -2.13661
         area = "Urdiain"
     if latitude is not None:
-        month = query.month or datetime.now(ZoneInfo("Europe/Madrid")).month
+        server_date = datetime.now(ZoneInfo("Atlantic/Canary" if longitude < -13 else "Europe/Madrid")).date()
+        today = query.observation_date or server_date
+        weather_requested = today == server_date and (query.month is None or query.observation_date is not None)
+        month = today.month if query.observation_date else query.month or today.month
+        day = today.day if query.observation_date or query.month is None else None
         try:
-            geography = nearby_fungi(latitude, longitude, month)
+            geography = nearby_fungi(latitude, longitude, month, day)
             if area:
                 geography["area"] = area
         except (requests.RequestException, KeyError, TypeError, ValueError) as error:
             geography_error = error
+
+    if weather_requested:
+        try:
+            weather = recent_weather(latitude, longitude, today)
+        except (requests.RequestException, KeyError, TypeError, ValueError):
+            pass
 
     names = list(query.species)
     names.extend(re.findall(r"\b[A-Z][a-z]{2,} [a-z]{3,}\b", query.question)[:8])
@@ -141,6 +157,7 @@ def consult(query: Consultation, authorization: str = Header(default="")) -> dic
                 "visual_hypotheses": observation,
                 "historical_gbif_sample": geography,
                 "documents": evidence,
+                "recent_weather": weather,
             }, ensure_ascii=False)
             answer = ask_lm_studio(
                 context,
@@ -149,6 +166,8 @@ def consult(query: Consultation, authorization: str = Header(default="")) -> dic
                 "figuran en la evidencia. Los registros de GBIF son una muestra histórica, "
                 "no predicen presencia actual, abundancia ni probabilidad de encontrar ejemplares. "
                 "Las referencias regionales son históricas y se limitan al ámbito indicado. "
+                "Usa la meteorología únicamente como contexto. No deduzcas presencia ni "
+                "condiciones favorables para una especie sin requisitos documentados. "
                 "Si no hay evidencia documental relevante, indícalo.",
             )
     except (OSError, ValueError, KeyError, IndexError, TypeError) as error:
@@ -157,7 +176,18 @@ def consult(query: Consultation, authorization: str = Header(default="")) -> dic
     if geography_error is not None:
         answer += "\n\nGBIF no está disponible para esta consulta."
 
-    return {"answer": answer, "sources": evidence, "geography": geography,
+    if weather is not None:
+        answer += (
+            "\n\n### Meteorología reciente de la zona\n"
+            f"- Precipitación acumulada: {weather['precipitation_7d_mm']:g} mm en 7 días "
+            f"y {weather['precipitation_14d_mm']:g} mm en 14 días.\n"
+            f"- Temperatura media de los últimos 7 días: {weather['mean_temperature_7d_c']:g} °C.\n"
+            f"- Último día incluido: {weather['to']} · [Open-Meteo]({weather['source']})."
+        )
+    elif weather_requested:
+        answer += "\n\nLa meteorología reciente no está disponible para esta consulta."
+
+    return {"answer": answer, "weather": weather, "sources": evidence, "geography": geography,
             "safety": SAFETY}
 
 

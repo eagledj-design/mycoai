@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Descargas e índice local de GBIF
+knowledge/gbif/

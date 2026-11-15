@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Headers
+import retrofit2.http.Query
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 import okhttp3.Interceptor
@@ -16,9 +16,14 @@ data class ConsultRequest(
     val question: String,
     val latitude: Double? = null,
     val longitude: Double? = null,
+    @SerializedName("radius_km") val radiusKm: Int? = null,
     val month: Int? = null,
     val species: List<String>? = null,
-    val images: List<String>? = null
+    val images: List<String>? = null,
+    val provider: String? = null,
+    val model: String? = null,
+    @SerializedName("vision_model") val visionModel: String? = null,
+    @SerializedName("provider_key") val providerKey: String? = null
 )
 
 data class ConsultResponse(
@@ -55,6 +60,12 @@ interface MycoAiApi {
 
     @POST("consult")
     suspend fun consult(@Body request: ConsultRequest): ConsultResponse
+
+    @GET("models")
+    suspend fun listModels(
+        @Query("provider") provider: String,
+        @Query("provider_key") providerKey: String? = null
+    ): List<String>
 }
 
 object RetrofitClient {
@@ -71,7 +82,7 @@ object RetrofitClient {
         }
 
         val okHttpClient = OkHttpClient.Builder()
-            .readTimeout(180, TimeUnit.SECONDS) // Two calls could take some time
+            .readTimeout(180, TimeUnit.SECONDS)
             .connectTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(authInterceptor)
             .build()

@@ -55,6 +55,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MushroomApp(viewModel: MushroomViewModel = viewModel()) {
+    val currentScreen by viewModel.currentScreen.collectAsState()
+
+    if (currentScreen == AppScreen.CONFIG) {
+        ConfigScreen(viewModel)
+        return
+    }
+
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val locationHelper = remember { LocationHelper(context) }
@@ -110,6 +117,7 @@ fun ChatScreen(viewModel: MushroomViewModel) {
     val isLoading by viewModel.isLoading.collectAsState()
     val currentLocation by viewModel.currentLocation.collectAsState()
     val useLocation by viewModel.useLocation.collectAsState()
+    val searchRadius by viewModel.searchRadius.collectAsState()
 
     var inputText by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -186,6 +194,42 @@ fun ChatScreen(viewModel: MushroomViewModel) {
                         uncheckedThumbColor = Color.Gray
                     )
                 )
+            }
+            
+            // Selector de Radio de Búsqueda
+            if (useLocation) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Radio (línea recta):",
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        listOf(2, 5, 10, 20).forEach { km ->
+                            val isSelected = searchRadius == km
+                            Surface(
+                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                                shape = RoundedCornerShape(16.dp),
+                                onClick = { viewModel.setSearchRadius(km) }
+                            ) {
+                                Text(
+                                    text = "${km}km",
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                    color = if (isSelected) MaterialTheme.colorScheme.onPrimary else Color.White,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
+                }
             }
 
             HorizontalDivider(color = Color.White.copy(alpha = 0.5f))
@@ -320,6 +364,191 @@ fun ChatBubble(message: UIMessage) {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ConfigScreen(viewModel: MushroomViewModel) {
+    var isPrivate by remember { mutableStateOf(true) }
+    
+    val privateProviders = listOf("lm_studio", "ollama")
+    val cloudProviders = listOf("openai", "cloud_compatible")
+
+    var selectedProvider by remember { mutableStateOf(privateProviders[0]) }
+    var apiKey by remember { mutableStateOf("") }
+    var selectedModel by remember { mutableStateOf("") }
+    
+    var useVisionModel by remember { mutableStateOf(false) }
+    var selectedVisionModel by remember { mutableStateOf("") }
+
+    val availableModels by viewModel.availableModels.collectAsState()
+    val isFetching by viewModel.isFetchingModels.collectAsState()
+
+    // Reset when toggling between private/cloud
+    LaunchedEffect(isPrivate) {
+        selectedProvider = if (isPrivate) privateProviders[0] else cloudProviders[0]
+        selectedModel = ""
+        selectedVisionModel = ""
+    }
+
+    val backgroundImage = androidx.compose.ui.res.painterResource(id = R.drawable.fondo)
+    
+    Box(modifier = Modifier.fillMaxSize()) {
+        androidx.compose.foundation.Image(
+            painter = backgroundImage,
+            contentDescription = "Fondo",
+            contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+        Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f)))
+
+        Column(
+            modifier = Modifier.fillMaxSize().padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(32.dp))
+            Text("Configuración MycoAI", style = MaterialTheme.typography.headlineMedium, color = Color.White)
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                Button(
+                    onClick = { isPrivate = true },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isPrivate) MaterialTheme.colorScheme.primary else Color.Gray.copy(alpha = 0.5f)
+                    )
+                ) { Text("IA Privada") }
+                
+                Button(
+                    onClick = { isPrivate = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (!isPrivate) MaterialTheme.colorScheme.primary else Color.Gray.copy(alpha = 0.5f)
+                    )
+                ) { Text("IA en Nube") }
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Selector de proveedor
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceEvenly) {
+                val currentList = if (isPrivate) privateProviders else cloudProviders
+                currentList.forEach { prov ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(selected = selectedProvider == prov, onClick = { selectedProvider = prov })
+                        Text(prov, color = Color.White)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (isPrivate) {
+                Text(
+                    "Nota: La IP y el puerto del servidor de modelos se configuran en el backend de MycoAI.",
+                    color = Color.Yellow,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            } else {
+                OutlinedTextField(
+                    value = apiKey, 
+                    onValueChange = { apiKey = it }, 
+                    label = { Text("API Key") }, 
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+            
+            Button(
+                onClick = { viewModel.fetchModels(selectedProvider, if (!isPrivate) apiKey else null) },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isFetching
+            ) {
+                Text(if (isFetching) "Cargando..." else "Buscar Modelos")
+            }
+            
+            if (availableModels.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = useVisionModel, 
+                        onCheckedChange = { useVisionModel = it },
+                        colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary, uncheckedColor = Color.White)
+                    )
+                    Text("Usar un modelo distinto para fotos", color = Color.White, fontSize = 14.sp)
+                }
+
+                Row(modifier = Modifier.fillMaxWidth().weight(1f)) {
+                    // Columna 1: Modelo principal
+                    Column(modifier = Modifier.weight(1f).padding(end = 4.dp)) {
+                        Text("Modelo Chat:", color = Color.White, fontSize = 12.sp)
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
+                                .padding(4.dp)
+                        ) {
+                            items(availableModels) { model ->
+                                val isSelected = selectedModel == model
+                                Surface(
+                                    color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                    shape = RoundedCornerShape(8.dp),
+                                    onClick = { selectedModel = model },
+                                    modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)
+                                ) {
+                                    Text(text = model, color = Color.White, modifier = Modifier.padding(8.dp), fontSize = 12.sp)
+                                }
+                            }
+                        }
+                    }
+
+                    // Columna 2: Modelo de Visión
+                    if (useVisionModel) {
+                        Column(modifier = Modifier.weight(1f).padding(start = 4.dp)) {
+                            Text("Modelo Fotos:", color = Color.White, fontSize = 12.sp)
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
+                                    .padding(4.dp)
+                            ) {
+                                items(availableModels) { model ->
+                                    val isSelected = selectedVisionModel == model
+                                    Surface(
+                                        color = if (isSelected) MaterialTheme.colorScheme.secondary else Color.Transparent,
+                                        shape = RoundedCornerShape(8.dp),
+                                        onClick = { selectedVisionModel = model },
+                                        modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)
+                                    ) {
+                                        Text(text = model, color = Color.White, modifier = Modifier.padding(8.dp), fontSize = 12.sp)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    viewModel.startChat(
+                        provider = selectedProvider,
+                        model = selectedModel,
+                        visionModel = if (useVisionModel && selectedVisionModel.isNotBlank()) selectedVisionModel else null,
+                        providerKey = if (!isPrivate && apiKey.isNotBlank()) apiKey else null
+                    )
+                },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                enabled = selectedModel.isNotBlank() && (!useVisionModel || selectedVisionModel.isNotBlank()) && (isPrivate || apiKey.isNotBlank())
+            ) {
+                Text("Empezar a buscar setas")
+            }
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

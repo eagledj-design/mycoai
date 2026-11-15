@@ -66,8 +66,8 @@ class MushroomViewModel : ViewModel() {
         viewModelScope.launch {
             _isFetchingModels.value = true
             try {
-                val models = RetrofitClient.getInstance(backendUrl).listModels(provider, providerKey)
-                _availableModels.value = models
+                val response = RetrofitClient.getInstance(backendUrl).listModels(provider, providerKey)
+                _availableModels.value = response.models
             } catch (e: Exception) {
                 e.printStackTrace()
                 _availableModels.value = emptyList()

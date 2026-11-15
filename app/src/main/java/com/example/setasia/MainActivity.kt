@@ -346,20 +346,38 @@ fun ChatBubble(message: UIMessage) {
 
                     if (!message.sources.isNullOrEmpty()) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("Fuentes:", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Text(
+                            text = "Fuentes:", 
+                            fontWeight = FontWeight.Bold, 
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                         message.sources.forEach { source ->
                             var sourceText = "- ${source.title}"
                             if (!source.species.isNullOrEmpty()) sourceText += " (Especies: ${source.species.joinToString(", ")})"
                             if (!source.zones.isNullOrEmpty()) sourceText += " (Zonas: ${source.zones.joinToString(", ")})"
-                            Text(sourceText, fontSize = 12.sp, color = Color.Gray)
+                            Text(
+                                text = sourceText, 
+                                fontSize = 13.sp, 
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
                     }
 
                     if (message.geography?.candidateSpecies != null && message.geography.candidateSpecies.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("Registros históricos cercanos:", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Text(
+                            text = "Registros históricos cercanos:", 
+                            fontWeight = FontWeight.Bold, 
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                         message.geography.candidateSpecies.forEach { candidate ->
-                            Text("- ${candidate.species} (${candidate.sampleRecords} registros)", fontSize = 12.sp, color = Color.DarkGray)
+                            Text(
+                                text = "- ${candidate.species} (${candidate.sampleRecords} registros)", 
+                                fontSize = 13.sp, 
+                                color = MaterialTheme.colorScheme.onSurfaceVariant // Gris claro legible en modo oscuro
+                            )
                         }
                     }
                 }

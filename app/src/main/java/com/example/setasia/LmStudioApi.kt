@@ -65,8 +65,13 @@ interface MycoAiApi {
     suspend fun listModels(
         @Query("provider") provider: String,
         @Query("provider_key") providerKey: String? = null
-    ): List<String>
+    ): ListModelsResponse
 }
+
+data class ListModelsResponse(
+    val provider: String,
+    val models: List<String>
+)
 
 object RetrofitClient {
     private val TOKEN = BuildConfig.BACKEND_TOKEN

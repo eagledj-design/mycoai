@@ -142,3 +142,26 @@ El modelo visual propone rasgos e hipótesis y el modelo de texto los coteja
 con la biblioteca. La API devuelve `answer`, `sources`, `geography` y
 `safety`. El resultado es orientativo y el GPS aporta evidencia histórica,
 sin confirmar presencia actual.
+
+### Selector de proveedor en SetasAI
+
+Android mantiene la URL y el token del backend MycoAI. Usa
+`GET /models?provider=ollama` para listar IDs y envía `provider` y
+`model` en `POST /consult`. `vision_model` es opcional y permite elegir
+otro modelo para la foto. Si se omite el proveedor se usa LM Studio.
+
+| Proveedor | Destino configurado en el backend |
+| --- | --- |
+| `lm_studio` | `MYCOAI_LM_URL`, por defecto `http://127.0.0.1:1234/v1/chat/completions` |
+| `ollama` | `MYCOAI_OLLAMA_URL`, por defecto `http://127.0.0.1:11434/v1` |
+| `openai` | OpenAI, con `OPENAI_API_KEY` |
+| `cloud_compatible` | `MYCOAI_CLOUD_URL` (HTTPS, base con `/models` y `/chat/completions`) y `MYCOAI_CLOUD_API_KEY` |
+
+La app puede enviar una clave de nube propia en la cabecera opcional
+`X-MycoAI-Provider-Key` en ambas llamadas. Usa un canal cifrado, por ejemplo
+HTTPS o el enlace privado de Tailscale. La clave del proveedor es diferente
+del token del backend. En modo nube, el proveedor recibe el texto, las fotos
+si se adjuntan y los extractos o resultados que MycoAI usa para la síntesis.
+La app elige el proveedor y el modelo. Las URLs de inferencia se configuran
+en el servidor. Las consultas deterministas de zona siguen usando las fuentes
+de MycoAI directamente.

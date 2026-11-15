@@ -7,7 +7,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Headers
+import retrofit2.http.Header
+import retrofit2.http.Query
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 import okhttp3.Interceptor
@@ -18,7 +19,11 @@ data class ConsultRequest(
     val longitude: Double? = null,
     val month: Int? = null,
     val species: List<String>? = null,
-    val images: List<String>? = null
+    val images: List<String>? = null,
+    val provider: String? = null,
+    val model: String? = null,
+    @SerializedName("vision_model")
+    val visionModel: String? = null
 )
 
 data class ConsultResponse(
@@ -49,12 +54,23 @@ data class CandidateSpecies(
     val example: String? = null
 )
 
+data class ProviderModelsResponse(val provider: String, val models: List<String>)
+
 interface MycoAiApi {
+    @GET("models")
+    suspend fun listModels(
+        @Query("provider") provider: String,
+        @Header("X-MycoAI-Provider-Key") providerKey: String? = null
+    ): ProviderModelsResponse
+
     @GET("health")
     suspend fun checkHealth(): retrofit2.Response<Void>
 
     @POST("consult")
-    suspend fun consult(@Body request: ConsultRequest): ConsultResponse
+    suspend fun consult(
+        @Body request: ConsultRequest,
+        @Header("X-MycoAI-Provider-Key") providerKey: String? = null
+    ): ConsultResponse
 }
 
 object RetrofitClient {

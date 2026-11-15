@@ -1,8 +1,11 @@
 """Política de fuentes para la biblioteca documental."""
 
+import re
 from urllib.parse import urlsplit
 
 DOMAINS = (
+    "aranzadi.eus",
+    "micologica-barakaldo.org",
     "mycokeys.pensoft.net",
     "imafungus.biomedcentral.com",
     "link.springer.com",
@@ -17,6 +20,10 @@ def source_type(url: str) -> str | None:
             or parsed.port not in (None, 443)):
         return None
     host = (parsed.hostname or "").removeprefix("www.")
+    if host == "aranzadi.eus" and parsed.path.startswith("/buscador-micologico/ficha/"):
+        return "ficha_micologica"
+    if host == "micologica-barakaldo.org" and re.fullmatch(r"/[a-z]+-[a-z-]+/?", parsed.path, re.I):
+        return "ficha_micologica"
     if host in ("mycobank.org", "indexfungorum.org"):
         return "registro_taxonomico"
     if host == "mycokeys.pensoft.net" and parsed.path.startswith("/article/"):

@@ -433,5 +433,32 @@
     "excerpt": "García Bona anotó Ramaria subbotrytis en una salida por los robledales de la ladera de Aralar, cerca de Lakuntza, el 24 de septiembre de 2023.",
     "locator": "Principales hongos observados",
     "type": "referencia_regional_historica"
+  },
+  {
+    "species": [],
+    "zones": [
+      "Ultzama"
+    ],
+    "url": "https://parquemicologicoultzama.com/es/ambito",
+    "title": "Parque Micológico Ultzama · Ámbito",
+    "excerpt": "En el ámbito del Parque Micológico de Ultzama predominan los hayedos y robledales atlánticos. Esta descripción corresponde al parque y no a la parcela del GPS.",
+    "locator": "Ámbito",
+    "type": "habitat_regional"
+  },
+  {
+    "species": [
+      "Boletus edulis",
+      "Boletus pinophilus",
+      "Boletus aereus",
+      "Boletus aestivalis"
+    ],
+    "zones": [
+      "Ultzama"
+    ],
+    "url": "https://parquemicologicoultzama.com/es/hongos",
+    "title": "Parque Micológico Ultzama · Hongos",
+    "excerpt": "Para orientar la búsqueda de boletos del grupo edulis, la guía del parque señala hayedos y robledales. Distingue Boletus edulis y Boletus pinophilus como otoñales y Boletus aereus y Boletus aestivalis como estivales. Es una descripción del hábitat y de la estacionalidad general.",
+    "locator": "Boletus gr. edulis",
+    "type": "habitat_regional"
   }
 ]

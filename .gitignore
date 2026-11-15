@@ -16,3 +16,23 @@ local.properties
 
 # Descargas e índice local de GBIF
 knowledge/gbif/
+
+# Cartografía forestal local
+knowledge/vegetacion/
+
+# Secretos y configuración local
+.env
+.env.*
+!.env.example
+keystore.properties
+*.jks
+*.keystore
+
+# Descargas, documentos generados y registros locales
+descargas_gbif/
+knowledge/fuentes/documentos/
+knowledge/fuentes/metadatos/
+knowledge/especies/pendientes/
+logs/
+*.log
+backups/

@@ -16,9 +16,8 @@ from datetime import datetime, timezone
 import json
 import logging
 import os
-import urllib.request
-import urllib.error
 
+from ai_provider import ModelProvider, resolve_provider
 from search_engine import search_web
 from config import (
     DATA_DIR,
@@ -33,7 +32,6 @@ from config import (
 # CONFIGURACIÓN
 # ============================================================
 
-LM_STUDIO_URL = os.getenv("MYCOAI_LM_URL", "http://127.0.0.1:1234/v1/chat/completions")
 
 # ============================================================
 # REGISTRO DE ACTIVIDAD
@@ -94,7 +92,10 @@ def create_research_request(species_name: str) -> dict:
     return request
 
 
-def ask_lm_studio(prompt: str, system_prompt: str = None, images: tuple[str, ...] = (), model: str | None = None) -> str:
+def ask_lm_studio(
+    prompt: str, system_prompt: str | None = None, images: tuple[str, ...] = (),
+    model: str | None = None, provider: ModelProvider | None = None,
+) -> str:
     """
     Envía una petición al modelo local de LM Studio.
 
@@ -133,33 +134,15 @@ def ask_lm_studio(prompt: str, system_prompt: str = None, images: tuple[str, ...
         "max_tokens": 2500
     }
 
-    data = json.dumps(payload).encode("utf-8")
-
-    request = urllib.request.Request(
-        LM_STUDIO_URL,
-        data=data,
-        headers={"Content-Type": "application/json"},
-        method="POST"
-    )
-
-    try:
-        with urllib.request.urlopen(request, timeout=300) as response:
-            result = json.loads(response.read().decode("utf-8"))
-
-        content = result["choices"][0]["message"]["content"]
-
-        logger.info("Respuesta recibida de LM Studio.")
-
-        return content
-
-    except urllib.error.URLError as error:
-        logger.error("Error conectando con LM Studio: %s", error)
-        raise
-
-    except (KeyError, IndexError, json.JSONDecodeError) as error:
-        logger.error("Respuesta inesperada de LM Studio: %s", error)
-        raise
-
+    provider = provider or resolve_provider("lm_studio")
+    if provider.name == "openai":
+        payload["max_completion_tokens"] = payload.pop("max_tokens")
+        payload.pop("temperature")
+    result = provider.request("POST", provider.chat_url, payload=payload)
+    answer = result["choices"][0]["message"]["content"]
+    if not isinstance(answer, str) or not answer.strip():
+        raise ValueError("El proveedor devolvió una respuesta vacía.")
+    return answer
 
 
 # ============================================================

@@ -265,6 +265,7 @@ fun ChatScreen(viewModel: MushroomViewModel) {
 fun ChatBubble(message: UIMessage) {
     val isUser = message.role == "user"
     val bubbleColor = if (isUser) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.secondaryContainer
+    val bubbleTextColor = if (isUser) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSecondaryContainer
     val alignment = if (isUser) Alignment.End else Alignment.Start
 
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = alignment) {
@@ -287,7 +288,8 @@ fun ChatBubble(message: UIMessage) {
                     }
                     Text(
                         text = message.content,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
+                        color = bubbleTextColor
                     )
                     
                     if (message.safety != null) {
@@ -302,20 +304,20 @@ fun ChatBubble(message: UIMessage) {
 
                     if (!message.sources.isNullOrEmpty()) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("Fuentes:", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Text("Fuentes:", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = bubbleTextColor)
                         message.sources.forEach { source ->
                             var sourceText = "- ${source.title}"
                             if (!source.species.isNullOrEmpty()) sourceText += " (Especies: ${source.species.joinToString(", ")})"
                             if (!source.zones.isNullOrEmpty()) sourceText += " (Zonas: ${source.zones.joinToString(", ")})"
-                            Text(sourceText, fontSize = 12.sp, color = Color.Gray)
+                            Text(sourceText, fontSize = 12.sp, color = bubbleTextColor)
                         }
                     }
 
                     if (message.geography?.candidateSpecies != null && message.geography.candidateSpecies.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text("Registros históricos cercanos:", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Text("Registros históricos cercanos:", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = bubbleTextColor)
                         message.geography.candidateSpecies.forEach { candidate ->
-                            Text("- ${candidate.species} (${candidate.sampleRecords} registros)", fontSize = 12.sp, color = Color.DarkGray)
+                            Text("- ${candidate.species} (${candidate.sampleRecords} registros)", fontSize = 12.sp, color = bubbleTextColor)
                         }
                     }
                 }

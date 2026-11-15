@@ -147,3 +147,24 @@ Añade `--document-species 20` al comando de importación para buscar y
 guardar también artículos de hasta 20 especies del índice. Prioriza las
 más representadas en la descarga, omite las que ya tienen un artículo
 recuperable y requiere la clave Tavily.
+
+### Vegetación alrededor del GPS
+
+Instala `python -m pip install -r requirements-vegetation.txt` y descarga
+la cartografía provincial del Mapa Forestal de España (MFE25) desde
+[MITECO](https://www.miteco.gob.es/es/biodiversidad/servicios/banco-datos-naturaleza/informacion-disponible/informacion_situacion_actual_mfe25_50.html).
+Extrae los shapefiles completos (incluidos .dbf, .shx y .prj) en
+`knowledge/vegetacion/` dentro del directorio de datos de MycoAI en
+BD_PYTHON. Puedes usar subcarpetas por provincia.
+
+El backend consulta las teselas MFE25 con campos SP1–SP3 a 2 km del
+GPS. Muestra los árboles registrados en esas teselas en la respuesta y
+en el campo opcional `vegetation`. Los códigos sin nombre incorporado
+se muestran como códigos MFE. La cartografía se procesa en local.
+
+MycoAI intenta primero consultar online el WMS del Mapa Forestal de
+España. Envía el GPS al servicio del MITECO y muestrea nueve puntos
+en un radio aproximado de 2 km. La respuesta muestra las especies y la
+cobertura que el servicio publique en los atributos. El muestreo puede
+omitir manchas pequeñas. Si el servicio no aporta datos utilizables, se
+intenta leer la cartografía local si está instalada.

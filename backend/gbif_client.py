@@ -17,16 +17,17 @@ def calendar_days(month: int, day: int | None) -> set[tuple[int, int]]:
     return {(value.month, value.day) for value in window}
 
 
-def nearby_fungi(latitude: float, longitude: float, month: int, day: int | None = None) -> dict:
+def nearby_fungi(latitude: float, longitude: float, month: int, day: int | None = None, *, genus: str | None = None) -> dict:
     south, north = max(-90, latitude - .1), min(90, latitude + .1)
     west, east = max(-180, longitude - .1), min(180, longitude + .1)
     bounds = south, north, west, east
     days = calendar_days(month, day)
-    records = records_nearby(bounds, days)
-    examined = len(records)
-    truncated = examined > 300
+    local_counts = records_nearby(bounds, days)
+    records = []
+    examined = sum(count for _, count, _ in local_counts)
+    truncated = False
     origin = "gbif_local"
-    if not records:
+    if not local_counts:
         origin = "gbif_api"
         rectangle = f"{west} {south},{east} {south},{east} {north},{west} {north},{west} {south}"
         for relevant_month in sorted({value[0] for value in days}):
@@ -48,10 +49,10 @@ def nearby_fungi(latitude: float, longitude: float, month: int, day: int | None 
                 if day is None or (item.get("month"), item.get("day")) in days
             )
 
-    counts = Counter()
-    examples = {}
+    counts = Counter({name: count for name, count, _ in local_counts})
+    examples = {name: f"https://www.gbif.org/occurrence/{key}" for name, _, key in local_counts}
     seen = set()
-    for record in records[:300] if origin == "gbif_local" else records:
+    for record in records:
         name = record.get("species")
         key = record.get("key")
         uncertainty = record.get("coordinateUncertaintyInMeters")
@@ -60,13 +61,21 @@ def nearby_fungi(latitude: float, longitude: float, month: int, day: int | None 
             counts[name] += 1
             examples.setdefault(name, f"https://www.gbif.org/occurrence/{key}")
 
+    if genus:
+        counts = Counter({
+            name: count for name, count in counts.items()
+            if name.split()[0].casefold() == genus.casefold()
+        })
+
     return {
+        "genus": genus,
         "month": month,
         "day": day,
         "window_days": 15 if day is not None else None,
         "origin": origin,
         "sampled": examined,
         "truncated": truncated,
+        "species_count": len(counts),
         "candidate_species": [
             {"species": name, "sample_records": count, "example": examples[name]}
             for name, count in counts.most_common(12)

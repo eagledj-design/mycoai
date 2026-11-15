@@ -117,7 +117,7 @@ concreta. Si no dispones de ella, reconoce la limitación.
 
 9. FORMATO DE RESPUESTA
 
-Presenta los resultados de forma estructurada:
+Para identificar un ejemplar, presenta los resultados de forma estructurada:
 
 - Identificación propuesta.
 - Nombre científico.
@@ -126,7 +126,6 @@ Presenta los resultados de forma estructurada:
 - Características pendientes de comprobar.
 - Especies similares y diferencias.
 - Hábitat y distribución documentados.
-- Toxicidad y advertencias.
 - Fuentes consultadas.
 - Nivel de certeza cualitativo.
 

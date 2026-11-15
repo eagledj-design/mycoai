@@ -1,5 +1,6 @@
 
 import logging
+import re
 
 from sources import DOMAINS, source_type
 from search_engine import search_web
@@ -34,6 +35,7 @@ def research_species(
         "species": species_name,
         "status": "started",
         "search_results": 0,
+        "sources_skipped": 0,
         "documents_saved": 0,
         "duplicates": 0,
         "metadata_extracted": 0,
@@ -49,15 +51,19 @@ def research_species(
 
     # 1. Buscar documentación
     query = (
-        f'"{species_name}" taxonomy morphology '
-        'habitat scientific description'
+        f'"{species_name}" ficha micológica descripción hábitat morphology identification'
     )
 
     try:
         results = search_web(
-            query,
-            max_results=max_sources, domains=DOMAINS
+            f'"{species_name}"',
+            max_results=5, domains=("aranzadi.eus", "micologica-barakaldo.org")
         )
+        if not any(source_type(item.get("url") or "") == "ficha_micologica" for item in results):
+            results = search_web(
+                query,
+                max_results=min(20, max(8, max_sources * 3)), domains=DOMAINS
+            )
 
         report["search_results"] = len(results)
 
@@ -73,7 +79,23 @@ def research_species(
         return report
 
     # 2. Descargar, extraer metadatos y almacenar
-    for index, result in enumerate(results, 1):
+    # Prioriza fichas descriptivas y deja los índices nomenclaturales al final.
+    priorities = {"ficha_micologica": 0, "revista": 1, "registro_taxonomico": 2}
+    candidates = []
+    for result in results:
+        try:
+            kind = source_type(result.get("url") or "")
+        except ValueError:
+            kind = None
+        if kind:
+            candidates.append((priorities[kind], result))
+        else:
+            report["sources_skipped"] += 1
+    candidates.sort(key=lambda entry: entry[0])
+
+    for index, (_, result) in enumerate(candidates, 1):
+        if len(report["documents"]) >= max_sources:
+            break
 
         url = result.get("url")
 
@@ -83,15 +105,18 @@ def research_species(
         logger.info(
             "Procesando fuente %s/%s: %s",
             index,
-            len(results),
+            len(candidates),
             url
         )
 
         try:
-            if not source_type(url):
-                continue
             document = extract_content(url, allow_url=source_type)
             document["source_type"] = source_type(document["url"])
+            pattern = r"(?<!\w)" + r"\s+".join(map(re.escape, species_name.split())) + r"(?!\w)"
+            if not re.search(pattern, document["text"], re.I):
+                report["sources_skipped"] += 1
+                logger.info("Texto sin mención de la especie solicitada: %s", url)
+                continue
 
             document["search_query"] = query
             document["search_title"] = result.get("title")
@@ -235,3 +260,38 @@ def research_species(
     )
 
     return report
+
+
+def research_common_name(question: str) -> list[str]:
+    """Resuelve nombres populares a partir de la sección de nombres de las fichas."""
+    from library import common_name_match
+
+    try:
+        results = search_web(
+            f"{question.strip()} ficha micológica nombre popular",
+            max_results=5,
+            domains=("aranzadi.eus", "micologica-barakaldo.org"),
+        )
+    except Exception:
+        logger.exception("Falló la búsqueda de nombres populares")
+        return []
+
+    names = []
+    for result in results:
+        url = result.get("url") or ""
+        try:
+            if source_type(url) != "ficha_micologica":
+                continue
+            document = extract_content(url, allow_url=source_type)
+            name = common_name_match(document, question)
+            if not name:
+                continue
+            document["source_type"] = "ficha_micologica"
+            save_document(document)
+            save_metadata(document, extract_metadata(document))
+            names.append(name)
+        except Exception:
+            logger.exception("No se pudo incorporar la ficha %s", url)
+        if len(names) >= 2:
+            break
+    return list(dict.fromkeys(names))

@@ -5,8 +5,10 @@ import csv
 import io
 import json
 import sqlite3
+import sys
 from contextlib import closing
 from datetime import date
+from functools import lru_cache
 from pathlib import Path
 from zipfile import ZipFile
 
@@ -33,7 +35,7 @@ def import_download(archive: Path, doi: str) -> int:
             for row in reader:
                 if row["countryCode"] != "ES" or row["kingdom"] != "Fungi" or not row["species"]:
                     continue
-                if row.get("occurrenceStatus") not in (None, "", "PRESENT"):
+                if row.get("occurrenceStatus") not in (None, "", "PRESENT", "DETECTED"):
                     continue
                 try:
                     key = int(row["gbifID"])
@@ -62,7 +64,21 @@ def import_download(archive: Path, doi: str) -> int:
         return total
 
 
-def records_nearby(bounds: tuple, days: set[tuple[int, int]]) -> list[dict]:
+def species_names() -> tuple[str, ...]:
+    if not DATABASE.is_file():
+        return ()
+    return _species_names(DATABASE, DATABASE.stat().st_mtime_ns)
+
+
+@lru_cache(maxsize=1)
+def _species_names(database: Path, modified_ns: int) -> tuple[str, ...]:
+    with closing(sqlite3.connect(f"{database.as_uri()}?mode=ro", uri=True)) as db:
+        return tuple(name for name, in db.execute(
+            "SELECT DISTINCT json_extract(record, '$.species') FROM records"
+        ) if name)
+
+
+def records_nearby(bounds: tuple, days: set[tuple[int, int]]) -> list[tuple[str, int, int]]:
     if not DATABASE.is_file():
         return []
     south, north, west, east = bounds
@@ -70,12 +86,13 @@ def records_nearby(bounds: tuple, days: set[tuple[int, int]]) -> list[dict]:
     placeholders = ",".join("?" for _ in keys)
     with closing(sqlite3.connect(f"{DATABASE.as_uri()}?mode=ro", uri=True)) as db:
         rows = db.execute(
-            f"""SELECT record FROM records WHERE year_day IN ({placeholders})
+            f"""SELECT json_extract(record, '$.species') AS species, COUNT(*), MIN(id)
+                FROM records WHERE year_day IN ({placeholders})
                 AND latitude BETWEEN ? AND ? AND longitude BETWEEN ? AND ?
-                ORDER BY id LIMIT 301""",
+                GROUP BY species ORDER BY COUNT(*) DESC, species""",
             (*keys, south, north, west, east),
         )
-        return [json.loads(row[0]) for row in rows]
+        return rows.fetchall()
 
 
 def document_species(limit: int) -> None:
@@ -101,6 +118,8 @@ def document_species(limit: int) -> None:
 
 
 if __name__ == "__main__":
+    # GBIF exports can contain long text fields even in rows we skip.
+    csv.field_size_limit(sys.maxsize)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("archive", type=Path)
     parser.add_argument("--doi", required=True, help="DOI de la descarga de GBIF")
